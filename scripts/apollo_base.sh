@@ -277,9 +277,10 @@ function start_prof_customized_path() {
     PROF_FILE="/tmp/$MODULE.prof"
     rm -rf $PROF_FILE
     BINARY=${APOLLO_BIN_PREFIX}/modules/${MODULE_PATH}/${MODULE}
-    eval "CPUPROFILE=$PROF_FILE $BINARY \
-        --flagfile=modules/${MODULE_PATH}/conf/${MODULE}.conf \
-        --log_dir=${APOLLO_ROOT_DIR}/data/log $@ </dev/null >${LOG} 2>&1 &"
+    # eval "CPUPROFILE=$PROF_FILE $BINARY \
+    #    --flagfile=modules/${MODULE_PATH}/conf/${MODULE}.conf \
+    #    --log_dir=${APOLLO_ROOT_DIR}/data/log $@ </dev/null >${LOG} 2>&1 &"
+    eval "CPUPROFILE=$PROF_FILE ${APOLLO_BIN_PREFIX}/cyber/mainboard -d modules/${MODULE_PATH}/dag/${MODULE_PATH}.dag"
     sleep 0.5
     is_stopped_customized_path "${MODULE_PATH}" "${MODULE}"
     if [ $? -eq 0 ]; then
@@ -329,9 +330,11 @@ function start_gdb_customized_path() {
   MODULE=$2
   shift 2
 
-  eval "gdb --args ${APOLLO_BIN_PREFIX}/modules/${MODULE_PATH}/${MODULE} \
-      --flagfile=modules/${MODULE_PATH}/conf/${MODULE}.conf \
-      --log_dir=${APOLLO_ROOT_DIR}/data/log $@"
+  # eval "gdb --args ${APOLLO_BIN_PREFIX}/modules/${MODULE_PATH}/${MODULE} \
+  #    --flagfile=modules/${MODULE_PATH}/conf/${MODULE}.conf \
+  #    --log_dir=${APOLLO_ROOT_DIR}/data/log $@"
+  eval "gdb -q --args ${APOLLO_BIN_PREFIX}/cyber/mainboard -d modules/${MODULE_PATH}/dag/${MODULE_PATH}.dag"
+
 }
 
 function start_gdb() {
