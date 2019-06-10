@@ -129,6 +129,8 @@ class NewtonM2Parser : public Parser {
 
   bool HandleCorrImuData(const novatel::CorrImuData* imu);
 
+  bool HandleImuRateCorrImuS(const novatel::ImuRateCorrImuS* imu);
+
   bool HandleInsCov(const novatel::InsCov* cov);
 
   bool HandleInsPva(const novatel::InsPva* pva);

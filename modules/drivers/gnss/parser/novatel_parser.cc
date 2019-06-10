@@ -127,6 +127,8 @@ class NovatelParser : public Parser {
 
   bool HandleCorrImuData(const novatel::CorrImuData* imu);
 
+  bool HandleImuRateCorrImuS(const novatel::ImuRateCorrImuS* imu);
+
   bool HandleInsCov(const novatel::InsCov* cov);
 
   bool HandleInsPva(const novatel::InsPva* pva);
@@ -361,12 +363,14 @@ Parser::MessageType NovatelParser::PrepareMessage(MessagePtr* message_ptr) {
 
     case novatel::CORRIMUDATA:
     case novatel::CORRIMUDATAS:
-      if (message_length != sizeof(novatel::CorrImuData)) {
+    case novatel::IMURATECORRIMUS:
+      if (message_length != sizeof(novatel::ImuRateCorrImuS)) {
         AERROR << "Incorrect message_length";
         break;
       }
 
-      if (HandleCorrImuData(reinterpret_cast<novatel::CorrImuData*>(message))) {
+      if (HandleImuRateCorrImuS(
+              reinterpret_cast<novatel::ImuRateCorrImuS*>(message))) {
         *message_ptr = &ins_;
         return MessageType::INS;
       }
@@ -634,7 +638,7 @@ bool NovatelParser::HandleBestVel(const novatel::BestVel* vel,
   return true;
 }
 
-bool NovatelParser::HandleCorrImuData(const novatel::CorrImuData* imu) {
+bool NovatelParser::HandleImuRateCorrImuS(const novatel::ImuRateCorrImuS* imu) {
   rfu_to_flu(imu->x_velocity_change * imu_measurement_hz_,
              imu->y_velocity_change * imu_measurement_hz_,
              imu->z_velocity_change * imu_measurement_hz_,

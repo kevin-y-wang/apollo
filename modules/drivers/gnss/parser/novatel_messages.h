@@ -39,6 +39,7 @@ enum MessageId : uint16_t {
   BESTVEL = 99,
   CORRIMUDATA = 812,
   CORRIMUDATAS = 813,
+  IMURATECORRIMUS = 1362,
   INSCOV = 264,
   INSCOVS = 320,
   INSPVA = 507,
@@ -376,6 +377,23 @@ struct CorrImuData {
   double z_velocity_change;  // change in velocity along z axis in m/s
 };
 static_assert(sizeof(CorrImuData) == 60, "Incorrect size of CorrImuData");
+
+// Asynchronous corrected IMU data for gravity, the earth's rotation and
+// estimated sensor errors.
+struct ImuRateCorrImuS {
+  uint32_t gps_week;
+  double gps_seconds;  // seconds of week
+  // All the measurements are in the SPAN computational frame: right, forward,
+  // up.
+  double x_angle_change;     // change in angle around x axis in radians
+  double y_angle_change;     // change in angle around y axis in radians
+  double z_angle_change;     // change in angle around z axis in radians
+  double x_velocity_change;  // change in velocity along x axis in m/s
+  double y_velocity_change;  // change in velocity along y axis in m/s
+  double z_velocity_change;  // change in velocity along z axis in m/s
+};
+static_assert(sizeof(ImuRateCorrImuS) == 60,
+              "Incorrect size of ImuRateCorrImuS");
 
 struct InsCov {
   uint32_t gps_week;
